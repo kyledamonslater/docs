@@ -1,0 +1,223 @@
+## Three-Layer Architecture
+
+### Layer 1: Project Manager Question Generation
+
+**Event-Driven Triggers**: PM immediately generates questions when critical events occur:
+
+- Task overdue or at risk of delay
+- Project stagnation (no activity for defined period)
+- Plan modifications or scope changes
+- Resource allocation changes
+- Dependency blockers identified
+- Quality gates failed
+- Budget or timeline variance detected
+
+**Scheduled Communications**: User-configurable routine assessments using natural language instructions:
+
+- "Every Monday morning, check if we're on track for the weekly sprint goal"
+- "End of each phase, confirm all deliverables are complete before proceeding"
+- "Bi-weekly stakeholder alignment: are priorities still correct?"
+- "Monthly team capacity review: is anyone overloaded or underutilized?"
+- "Daily at 3 PM, verify critical path tasks are progressing"
+- "Friday afternoons, assess if weekend work is needed"
+
+**Question Types**: PM questions focus on project-critical information needed for autonomous decision-making (e.g., "Are we ready to proceed with Phase 2?" or "Is the API dependency still blocking frontend work?")
+
+### Layer 2: Binary Cue Orchestrator
+
+**Question Processing**: Receives PM questions and analyzes what specific information is needed to derive accurate answers
+
+**Cue Generation**: Transforms broad PM questions into minimal, targeted binary cues for specific individuals (e.g., PM asks "Is Phase 2 ready?" → Orchestrator generates "Is the database schema finalized? [Yes/No]" for the backend lead)
+
+**Optimization Logic**: Determines the minimum number of cues needed to answer PM questions, ensuring no unnecessary user interruption
+
+### Layer 3: Personal Assistant Delivery
+
+**Queue Management**: Each user's Personal Assistant manages their individual cue queue, considering workload, timezone, and response patterns
+
+**Timing Intelligence**: Delivers cues at optimal moments based on user availability, working hours, and current task context
+
+**Multi-Channel Coordination**: Routes cues through user's preferred communication channels while managing escalation timelines
+
+## System Architecture Flow
+
+\<Mermaid\> `graph TD A[Start] --> B{Is it working?} B -->|Yes| C[Great!] B -->|No| D[Debug] D --> B`} \</Mermaid\>
+
+```
+graph TB
+    A[Project State Change] --> B{Trigger Type}
+    B -->|Event Driven| C[PM Event Analysis]
+    B -->|Scheduled Event| D[PM Scheduled Analysis]
+    
+    C --> E[PM Generates Questions]
+    D --> E
+    
+    E --> F[Binary Cue Orchestrator]
+    F --> G[Analyze Question Requirements]
+    G --> H[Generate Minimal Binary Cues]
+    
+    H --> I[Personal Assistant A]
+    H --> J[Personal Assistant B]
+    H --> K[Personal Assistant N...]
+    
+    I --> L[Queue Management]
+    J --> M[Queue Management]
+    K --> N[Queue Management]
+    
+    L --> O[Deliver via Preferred Channel]
+    M --> P[Deliver via Preferred Channel]
+    N --> Q[Deliver via Preferred Channel]
+    
+    O --> R[User Response]
+    P --> S[User Response]
+    Q --> T[User Response]
+    
+    R --> U[Orchestrator Synthesis]
+    S --> U
+    T --> U
+    
+    U --> V[Answer to PM]
+    V --> W[Project State Update]
+```
+
+## Detailed Cue Lifecycle
+
+```
+sequenceDiagram
+    participant PM as Project Manager
+    participant BCO as Binary Cue Orchestrator
+    participant PA as Personal Assistant
+    participant User as Team Member
+    participant Slack as Communication Channel
+    
+    Note over PM: 12 AM Daily Analysis
+    PM->>BCO: "Is Phase 2 ready to begin?"
+    BCO->>BCO: Analyze requirements
+    BCO->>PA: Generate cue: "Database schema complete? [Y/N]"
+    PA->>PA: Queue management & timing
+    PA->>Slack: Deliver cue at optimal time
+    Slack->>User: Interactive cue button
+    User->>Slack: Click "Yes"
+    Slack->>PA: Response captured
+    PA->>BCO: Forward response
+    BCO->>PM: "Phase 2 ready: Yes (based on schema completion)"
+    PM->>PM: Update project state & proceed
+```
+
+## Multi-User Cue Orchestration
+
+```
+graph LR
+    A[PM Question: "Can we ship next week?"] --> B[Binary Cue Orchestrator]
+    
+    B --> C[Cue 1: "Testing complete?"]
+    B --> D[Cue 2: "Documentation ready?"]
+    B --> E[Cue 3: "Deployment pipeline tested?"]
+    
+    C --> F[QA Lead Assistant]
+    D --> G[Tech Writer Assistant]
+    E --> H[DevOps Assistant]
+    
+    F --> I[QA Lead: "Yes"]
+    G --> J[Tech Writer: "No"]
+    H --> K[DevOps: "Yes"]
+    
+    I --> L[Orchestrator Synthesis]
+    J --> L
+    K --> L
+    
+    L --> M[Answer: "Not ready - docs incomplete"]
+    M --> N[PM adjusts timeline]
+```
+
+## Technical Implementation
+
+**Cue Engine Architecture**:
+
+- **Event Bus**: Captures project state changes and scheduled triggers
+- **Question Generator**: PM analyzes context and formulates strategic questions
+- **Orchestration Engine**: Breaks PM questions into minimal binary cues
+- **Assistant Network**: Distributed queue management across all user assistants
+- **Response Synthesis**: Aggregates binary responses into PM answers
+
+**Payload Structure**:
+
+```
+{
+  "cue_id": "uuid",
+  "sequence_position": 1,
+  "question_text": "Database schema finalized?",
+  "context": {
+    "project_id": "proj_123",
+    "pm_question": "Is Phase 2 ready?",
+    "dependency_chain": ["schema", "api_design"]
+  },
+  "ttl": 3600,
+  "escalation_rules": {
+    "timeout_minutes": 240,
+    "escalation_chain": ["dm", "email", "owner"]
+  },
+  "consent_flags": {
+    "assistant_auto_respond": true,
+    "data_retention": "30_days"
+  }
+}
+```
+
+**Delivery System**:
+
+- **WebSocket** connections for real-time in-app delivery
+- **Platform adapters** for Slack/Teams with native UI components
+- **Email fallback** with unified response tracking
+- **Mobile push** notifications with platform-specific rendering
+
+## User Experience Patterns
+
+**Trigger Scenarios**:
+
+- **Immediate**: Task overdue → "Blocker resolved? [Yes/No]"
+- **Scheduled**: Monday standup → "Sprint goal achievable? [Yes/No]"
+- **Contextual**: Plan change → "New timeline realistic? [Yes/No]"
+
+**Response Processing**:
+
+1. User clicks binary choice
+2. Assistant captures response \+ timestamp
+3. Orchestrator synthesizes with other responses
+4. PM receives comprehensive answer
+5. Project state automatically updates
+6. Team receives relevant notifications
+
+## Key Innovation
+
+The three-layer architecture transforms traditional project communication from high-effort status meetings and lengthy updates into seamless, intelligent binary interactions that maintain project momentum while respecting individual cognitive load and working patterns.
+
+## Cue Engine Architecture
+
+**Payload Structure**:
+
+- Cue ID and sequence position
+- Question text and context
+- Time-to-live (TTL) and escalation rules
+- Consent flags and override permissions
+- Dependency mapping for downstream effects
+
+**Delivery System**:
+
+- WebSocket connections for real-time in-app delivery
+- Platform-specific adapters for Slack/Teams integration
+- Email fallback with unified response tracking
+- Mobile push notifications with native UI components
+
+## User Experience Flow
+
+1. **Trigger Event**: Project state change or scheduled check-in
+2. **Cue Generation**: AI creates contextually relevant yes/no question
+3. **Multi-Channel Delivery**: User receives cue via preferred platform
+4. **Response Collection**: Simple button click or swipe gesture
+5. **State Update**: Project data automatically updated
+6. **Cascade Effects**: Dependencies and timelines adjusted as needed
+
+## Key Innovation
+
+Unlike open-ended status requests that create "collaboration tax," binary cues enable precise data collection through minimal user effort, allowing AI to infer project health and make autonomous adjustments without requiring detailed explanations or lengthy meetings.
